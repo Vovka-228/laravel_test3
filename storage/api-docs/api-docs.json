@@ -1,0 +1,106 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Swagger with Laravel",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/register": {
+            "post": {
+                "summary": "Регистрация нового пользователя",
+                "operationId": "6fcc6ed59a5c00c14af5feb90c032dc1",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Имя пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "Номер телефона пользователя. Должен быть уникальным для каждого",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Пароль пользователя. От 8 символов",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Успешная регистрация"
+                    },
+                    "422": {
+                        "description": "Ошибка при регистрации"
+                    }
+                }
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "summary": "Авторизация и генерирование Sanctum токена",
+                "operationId": "51aac885e15c79a3f73d763657f475f5",
+                "parameters": [
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "Номер телефона пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Пароль пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный вход"
+                    },
+                    "401": {
+                        "description": "Ошибка в авторизации"
+                    }
+                }
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "summary": "Выход из аккаунта",
+                "operationId": "296114c756de6426e095fc876be245f9",
+                "responses": {
+                    "200": {
+                        "description": "Успешный выход из аккаунта"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "Sanctum",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
