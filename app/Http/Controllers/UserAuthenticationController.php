@@ -14,6 +14,7 @@ class UserAuthenticationController extends Controller
      * @OA\Post(
      *     path="/api/v1/register",
      *     summary="Регистрация нового пользователя",
+     *     tags= {"auth"},
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
@@ -24,7 +25,7 @@ class UserAuthenticationController extends Controller
      *     @OA\Parameter(
      *         name="phone_number",
      *         in="query",
-     *         description="Номер телефона пользователя. Должен быть уникальным для каждого",
+     *         description="Номер телефона пользователя. Должен быть уникальным для каждого. От 11 символов",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
@@ -44,7 +45,7 @@ class UserAuthenticationController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|unique:users',
+            'phone_number' => 'required|string|min:11|unique:users',
             'password' => 'required|string|min:8',
         ]);
 
@@ -77,17 +78,18 @@ class UserAuthenticationController extends Controller
      * @OA\Post(
      *     path="/api/v1/login",
      *     summary="Авторизация и генерирование Sanctum токена",
+     *     tags= {"auth"},
      *     @OA\Parameter(
      *         name="phone_number",
      *         in="query",
-     *         description="Номер телефона пользователя",
+     *         description="Номер телефона пользователя. От 11 символов",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="password",
      *         in="query",
-     *         description="Пароль пользователя",
+     *         description="Пароль пользователя. От 8 символов",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
@@ -97,6 +99,18 @@ class UserAuthenticationController extends Controller
      */
     public function login(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'phone_number' => 'required|string|min:11',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         $phone_number = strtolower($request->input('phone_number'));
         $password = $request->input('password');
 
@@ -104,6 +118,7 @@ class UserAuthenticationController extends Controller
             'phone_number' => $phone_number,
             'password' => $password
         ];
+
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid login credentials'
@@ -124,6 +139,7 @@ class UserAuthenticationController extends Controller
      * @OA\Post(
      *     path="/api/v1/logout",
      *     summary="Выход из аккаунта",
+     *     tags= {"auth"},
      *     @OA\Response(response="200", description="Успешный выход из аккаунта"),
      * )
      */

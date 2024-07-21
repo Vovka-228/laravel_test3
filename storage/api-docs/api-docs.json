@@ -7,6 +7,9 @@
     "paths": {
         "/api/v1/register": {
             "post": {
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Регистрация нового пользователя",
                 "operationId": "6fcc6ed59a5c00c14af5feb90c032dc1",
                 "parameters": [
@@ -22,7 +25,7 @@
                     {
                         "name": "phone_number",
                         "in": "query",
-                        "description": "Номер телефона пользователя. Должен быть уникальным для каждого",
+                        "description": "Номер телефона пользователя. Должен быть уникальным для каждого. От 11 символов",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -50,13 +53,16 @@
         },
         "/api/v1/login": {
             "post": {
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Авторизация и генерирование Sanctum токена",
                 "operationId": "51aac885e15c79a3f73d763657f475f5",
                 "parameters": [
                     {
                         "name": "phone_number",
                         "in": "query",
-                        "description": "Номер телефона пользователя",
+                        "description": "Номер телефона пользователя. От 11 символов",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -65,7 +71,7 @@
                     {
                         "name": "password",
                         "in": "query",
-                        "description": "Пароль пользователя",
+                        "description": "Пароль пользователя. От 8 символов",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -84,6 +90,9 @@
         },
         "/api/v1/logout": {
             "post": {
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Выход из аккаунта",
                 "operationId": "296114c756de6426e095fc876be245f9",
                 "responses": {
@@ -102,5 +111,11 @@
                 "scheme": "bearer"
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "auth",
+            "description": "auth"
+        }
+    ]
 }
